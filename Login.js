@@ -13,7 +13,9 @@ import {
   Dimensions,
   TextInput,
   AsyncStorage,
-  TouchableOpacity
+  TouchableOpacity,
+  Modal,
+  ActivityIndicator,
 } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 var{width,height}=Dimensions.get('window');
@@ -24,7 +26,7 @@ var config = {
     authDomain: "gettrings.firebaseapp.com",
     databaseURL: "https://gettrings.firebaseio.com",
     projectId: "gettrings",
-    storageBucket: "",
+    storageBucket: "gettrings.appspot.com",
     messagingSenderId: "1005207137910"
   };
 
@@ -38,15 +40,55 @@ export default class Login extends Component {
     super(props);
     this.state = {
       email:"",
-      pass:""
+      pass:"",
+      modalVisible : false
     }
+    AsyncStorage.multiGet(['email', 'password', 'userId']).then((data) => {
+
+        let email = data[0][1];
+        let password = data[1][1];
+        let userId = data[2][1];
+        if(email!=null){
+          this.setState({
+            modalVisible : true
+          });
+          firebaseapp.auth().signInWithEmailAndPassword(email, password).then(() => {
+            const { navigate } = this.props.navigation;
+            this.setState({
+              modalVisible : false
+            });
+            navigate('Home');
+          }).catch((error) => {
+            alert("error " + error.message );
+          });
+        }
+        else{
+          //alert("kososn");
+        }
+    });
   }
 
+
   login = ()=>{
+    this.setState({
+      modalVisible : true
+    });
     firebaseapp.auth().signInWithEmailAndPassword(this.state.email,this.state.pass).then(()=>{
+      var userId = firebase.auth().currentUser.uid;
+      AsyncStorage.multiSet([
+        ["email", this.state.email],
+        ["password", this.state.pass],
+        ["userId", userId],
+      ]);
+      this.setState({
+        modalVisible : false
+      });
       const { navigate } = this.props.navigation;
       navigate("Home");
     }).catch((Error)=>{
+      this.setState({
+        modalVisible : false
+      });
         alert(Error);
     });
   }
@@ -57,6 +99,20 @@ export default class Login extends Component {
           source={require('./login.png')}
           style={{height:height,width:width}}
         >
+        <Modal
+                animationType = {"fade"}
+                transparent   = {true}
+                visible       = {this.state.modalVisible} onRequestClose ={()=>{console.log('closed')}}
+        >
+        <View style={{width: width-100, height : 100, backgroundColor : 'white', alignSelf : 'center', marginTop : height/2.5}}>
+          <ActivityIndicator
+              animating={true}
+              color="#bc2b78"
+              size = 'large'
+              style={{marginTop:30}}
+          />
+        </View>
+        </Modal>
         <Text style={{color:'white',textAlign:'center',marginTop:250,fontSize:45}}>
           
         </Text>
@@ -83,7 +139,7 @@ export default class Login extends Component {
         style={{alignSelf:'center', marginTop:10, height: 40, width: 300}}>
             <Text
             style={{marginLeft:'35%'}}>Login</Text>
-          </Button>
+        </Button>
         <View
         style={{flexDirection:'row'}}>
         <Text

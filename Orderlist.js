@@ -18,9 +18,9 @@ import { StackNavigator } from 'react-navigation';
 import Drawer from 'react-native-drawer';
 import GridView from 'react-native-super-grid';
 import ScrollableTabView, {DefaultTabBar, } from 'react-native-scrollable-tab-view';
-import { Container, Header, Content, Text, Button, Icon, Left, Body, Title, Right, Tabs, Tab, TabHeading, Card, CardItem} from 'native-base';
+import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text, List, ListItem, Thumbnail} from 'native-base';
 var{width,height}=Dimensions.get('window');
-export default class FoodView extends Component {
+export default class Order extends Component {
   static navigationOptions = {
       header : null
   };
@@ -42,12 +42,18 @@ export default class FoodView extends Component {
               source={require('./logo.png')}
               style={{height:150,width:-300}}/>
               <View style={{width : width-140, height : height, backgroundColor : 'white', paddingLeft : 20}}>
-                <Text style={{marginTop : 20}}> Home </Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress = {()=>navigate('Home')}>
+                  <Text style={{marginTop : 20}}> Home </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress = {()=>navigate('Shop')}>
+                  <Text style={{marginTop : 20}}> Shop </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress = {()=>navigate('Createshop')}>
                   <Text style={{marginTop : 20}}> Create Shop </Text>
                 </TouchableOpacity>
-                <Text style={{marginTop : 20}}> Manage Shop </Text>
-                <Text style={{marginTop : 20}}> Logout </Text>
+                <TouchableOpacity onPress = {()=>this.logout()}>
+                  <Text style={{marginTop : 20}}> Logout </Text>
+                </TouchableOpacity>
               </View>
           </View>
 
@@ -61,33 +67,38 @@ export default class FoodView extends Component {
         main: { opacity:(2-ratio)/2 }
         })}
       >
-     <Container style={{backgroundColor : 'white'}}>
-        <View style={{position :'absolute', zIndex : 1, marginLeft : 5, marginTop : 15, flexDirection : 'row'}}>
-        <Icon onPress={()=>this.openControlPanel()} name = 'menu' style={{color : 'white'}}/>
-          <Text style={{marginLeft : 20, color : 'white', fontSize : 20}}> Food View </Text>
-        </View>
-        <Header hasTabs />
+      <Container>
+        <Header>
+          <Left>
+            <Button transparent>
+              <Icon name='menu' />
+            </Button>
+          </Left>
+          <Body>
+            <Title>Order List</Title>
+          </Body>
+          <Right />
+        </Header>
         <Content>
-          <Card>
-           <Image 
-              source={{uri:this.props.navigation.state.params.uri}}
-              style={{height:250,width:width, alignSelf : 'center', marginTop :10}}/>
-          </Card>
-              <Text style={{color : 'green', alignSelf : 'center'}}>
-                {this.props.navigation.state.params.paket}
-              </Text>
-              <Text style={{color : 'green', alignSelf : 'center'}}>
-                Rp. {this.props.navigation.state.params.harga}/orang
-              </Text>
-              <Text style={{color : 'black', marginLeft : 3}}>
-                Menu : {this.props.navigation.state.params.menu}
-              </Text>
+          <List>
+            <ListItem>
+              <Body>
+                <Text>Paket Panas</Text>
+                <Text note>Order by admin@gmail.com</Text>
+                <Button danger><Text> Pick Up Order </Text></Button>
+              </Body>
+            </ListItem>
+          </List>
+          <List>
+            <ListItem>
+              <Body>
+                <Text>Paket Panas</Text>
+                <Text note>Order by admin@gmail.com</Text>
+                <Button success><Text> Success </Text></Button>
+              </Body>
+            </ListItem>
+          </List>
         </Content>
-        <View style={{width : width, height : 40, position : 'absolute', bottom : 0}}>
-          <Button block onPress = {()=>navigate('Order')} style={{width : width, height : 40}}>
-            <Text>Order</Text>
-          </Button>
-        </View>
       </Container>
 </Drawer>
     );

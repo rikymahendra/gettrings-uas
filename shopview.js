@@ -20,7 +20,7 @@ import GridView from 'react-native-super-grid';
 import ScrollableTabView, {DefaultTabBar, } from 'react-native-scrollable-tab-view';
 import { Container, Header, Content, Text, Button, Icon, Left, Body, Title, Right, Tabs, Tab, TabHeading, Card, CardItem} from 'native-base';
 var{width,height}=Dimensions.get('window');
-export default class FoodView extends Component {
+export default class Shopview extends Component {
   static navigationOptions = {
       header : null
   };
@@ -64,30 +64,28 @@ export default class FoodView extends Component {
      <Container style={{backgroundColor : 'white'}}>
         <View style={{position :'absolute', zIndex : 1, marginLeft : 5, marginTop : 15, flexDirection : 'row'}}>
         <Icon onPress={()=>this.openControlPanel()} name = 'menu' style={{color : 'white'}}/>
-          <Text style={{marginLeft : 20, color : 'white', fontSize : 20}}> Food View </Text>
+          <Text style={{marginLeft : 20, color : 'white', fontSize : 20}}> Shop Detail </Text>
         </View>
         <Header hasTabs />
         <Content>
           <Card>
            <Image 
-              source={{uri:this.props.navigation.state.params.uri}}
+              source={require('./mieayam.jpg')}
               style={{height:250,width:width, alignSelf : 'center', marginTop :10}}/>
           </Card>
-              <Text style={{color : 'green', alignSelf : 'center'}}>
-                {this.props.navigation.state.params.paket}
-              </Text>
-              <Text style={{color : 'green', alignSelf : 'center'}}>
-                Rp. {this.props.navigation.state.params.harga}/orang
-              </Text>
-              <Text style={{color : 'black', marginLeft : 3}}>
-                Menu : {this.props.navigation.state.params.menu}
-              </Text>
+            <Text style={{color : 'green', alignSelf : 'center'}}>
+              Shop Name
+            </Text>
+            <Text style={{color : 'blue', marginTop : 5}}>
+              Phone Number : ---
+            </Text>
+            <Text style={{color : 'blue', marginTop : 5}}>
+              Email : ---
+            </Text>
+            <Text style={{color : 'blue', marginTop : 5}}>
+              Address : ---
+            </Text>
         </Content>
-        <View style={{width : width, height : 40, position : 'absolute', bottom : 0}}>
-          <Button block onPress = {()=>navigate('Order')} style={{width : width, height : 40}}>
-            <Text>Order</Text>
-          </Button>
-        </View>
       </Container>
 </Drawer>
     );

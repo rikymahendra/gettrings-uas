@@ -1,9 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
 import React, { Component } from 'react';
 import {
   AppRegistry,
@@ -12,26 +6,17 @@ import {
   Image,
   Dimensions,
   TextInput,
+  Modal,
   TouchableOpacity,
-  AsyncStorage
 } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import Drawer from 'react-native-drawer';
 import GridView from 'react-native-super-grid';
 import * as firebase from "firebase";
 import ScrollableTabView, {DefaultTabBar, } from 'react-native-scrollable-tab-view';
-import { Container, Header, Content, Text, Button, Icon, Left, Body, Title, Right, Tabs, Tab, TabHeading, Card, CardItem} from 'native-base';
+import { Container, Header, Content, Text, Button, Icon, Left, Body, Title, Right, Tabs, Tab, TabHeading, Card, CardItem, ListItem, List, Thumbnail} from 'native-base';
 var{width,height}=Dimensions.get('window');
-export default class Home extends Component {
-  constructor(props){
-    super(props);
-    this.state={
-      items : [],
-      temp : [],
-      itemsMenu : [],
-      tempMenu : []
-    }
-  }
+export default class Shop extends Component {
   static navigationOptions = {
       header : null
   };
@@ -42,19 +27,15 @@ export default class Home extends Component {
     this._drawer.open();
   };
 
-  logout=()=>{
-   let keys = ['albums','email', 'password', 'userId','username','fullName','gender','birth'];
-
-  AsyncStorage.multiRemove(keys, (err) => {
-
-      alert("Logged out!");
-
-  });
-
-  firebase.auth().signOut().then(()=>{
-     const { navigate } = this.props.navigation;
-     navigate("Login");
-  });
+  constructor(props){
+    super(props);
+    this.state={
+      items : [],
+      temp : [],
+      itemsMenu : [],
+      tempMenu : [],
+      modalVisible : false
+    }
   }
 
   componentWillMount(){
@@ -117,7 +98,12 @@ export default class Home extends Component {
         }
     });
   }
-  
+
+  edit=()=>{
+    const { navigate } = this.props.navigation;
+    navigate('EditMenu');
+    this.setState({modalVisible : false});
+  }
   render() {
       const { navigate } = this.props.navigation;
     return (
@@ -136,16 +122,12 @@ export default class Home extends Component {
                 <TouchableOpacity onPress = {()=>navigate('Shop')}>
                   <Text style={{marginTop : 20}}> Shop </Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress = {()=>navigate('OrderList')}>
-                  <Text style={{marginTop : 20}}> Order List </Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress = {()=>this.createShope()}>
+                <TouchableOpacity onPress = {()=>navigate('Createshop')}>
                   <Text style={{marginTop : 20}}> Create Shop </Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress = {()=>this.logout()}>
                   <Text style={{marginTop : 20}}> Logout </Text>
                 </TouchableOpacity>
-
               </View>
           </View>
 
@@ -159,61 +141,103 @@ export default class Home extends Component {
         main: { opacity:(2-ratio)/2 }
         })}
       >
-     <Container>
+     <Container style={{backgroundColor : "white"}}>
+      <Modal
+                animationType = {"fade"}
+                transparent   = {true}
+                visible       = {this.state.modalVisible} onRequestClose ={()=>{console.log('closed')}}
+        >
+        <View style={{width: width-200, height : 100, backgroundColor : 'white', alignSelf : 'center', marginTop : height/2.5}}>
+        <TouchableOpacity onPress={()=>this.edit()}>
+          <Text style={{marginTop : 10, marginLeft : 10}}>
+            Edit
+          </Text>
+        </TouchableOpacity>
+        <View style={{height : 10, width : width-200}}></View>
+        <TouchableOpacity>
+          <Text style={{marginTop : 10, marginLeft : 10}}>
+            Delete
+          </Text>
+        </TouchableOpacity>
+        </View>
+      </Modal>
         <View style={{position :'absolute', zIndex : 1, marginLeft : 5, marginTop : 15, flexDirection : 'row'}}>
         <Icon onPress={()=>this.openControlPanel()} name = 'menu' style={{color : 'white'}}/>
-        <Text style={{marginLeft : 20, color : 'white', fontSize : 20}}> Home</Text>
+        <Text style={{marginLeft : 20, color : 'white', fontSize : 20}}> Shop</Text>
         </View>
         <Header hasTabs />
         <Tabs initialPage={0}>
-          <Tab heading="Food & Drink">
+          <Tab heading="Manage Shop">
             <GridView
               itemWidth={130}
-              items={this.state.itemsMenu}
+              items={[1,2]}
               renderItem={item => (
-                <TouchableOpacity onPress={()=>navigate('FoodView',{id : item.id, uri : item.uri, harga : item.harga, paket : item.paket, menu : item.menu})}>
-                 <Card >
-                   <CardItem>
-                    <Body>
-                       <Image 
-                       source={{uri:item.uri}}
-                        style={{height:150,width:150}}/>
-                        <Text style={{color : 'green'}}>
-                          {item.paket}
-                        </Text>
-                        <Text style={{color : 'green'}}>
-                         Rp. {item.harga}
-                        </Text>
-                    </Body>
-                   </CardItem>
-                </Card>
+                <TouchableOpacity onPress={()=>navigate('FoodViewShop')}>
+                  <Card >
+                    <CardItem>
+                      <View style={{position : 'absolute', bottom : 10, right : 0}}>
+                        <TouchableOpacity onPress={()=>this.setState({modalVisible : true})}>
+                          <Icon name = 'menu' style={{color : 'green'}}>
+                          </Icon>
+                        </TouchableOpacity>
+                      </View>
+                        <Body>
+                          <Image 
+                            source={require('./mieayam.jpg')}
+                            style={{height:150,width:150}}/>
+                            <Text style={{color : 'green'}}>
+                              Mie Ayam
+                            </Text>
+                            <Text style={{color : 'green'}}>
+                              Rp. 10000/porsi
+                            </Text>
+                        </Body>            
+                    </CardItem>
+                  </Card>
                 </TouchableOpacity>
               )}
             />
           </Tab>
-          <Tab heading="Shop">
+          <Tab heading="Notification">
               <GridView
               itemWidth={130}
-              items={this.state.items}
+              items={[1]}
               renderItem={item => (
-                <TouchableOpacity onPress={()=>navigate("FoodView",{id : item.id, uri : item.uri, name : item.shopName})}>
-                 <Card>
-                   <CardItem>
-                    <Body>
-                       <Image 
-                        source={{uri:item.uri}} 
-                        style={{height:150,width:150}}/>
-                        <Text style={{color : 'green'}}>
-                          {item.shopName}
-                        </Text>
-                    </Body>
-                   </CardItem>
-                </Card>
-                </TouchableOpacity>
+                  <Content>
+                    <TouchableOpacity>
+                      <List>
+                        <ListItem>
+                          <Body>
+                            <Text>Paket Panas</Text>
+                            <Text note>Order by admin@gmail.com</Text>
+                            <Button danger><Text> Pick Up Order </Text></Button>
+                          </Body>
+                        </ListItem>
+                        </List>
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                      <List>
+                        <ListItem>
+                          <Body>
+                            <Text>Paket Panas</Text>
+                            <Text note>Order by admin@gmail.com</Text>
+                            <Button success><Text> Success </Text></Button>
+                          </Body>
+                        </ListItem>
+                      </List>
+                    </TouchableOpacity>
+                  </Content>
               )}
             />
           </Tab>
         </Tabs>
+        <View style={{width : width, height : 40, position : 'absolute', bottom : 0}}>
+          <Button block style={{width : width, height : 40}}>
+            <TouchableOpacity onPress={()=>navigate('Createmenu')}>
+              <Text>Create Package Food</Text>
+            </TouchableOpacity>
+          </Button>
+        </View>
       </Container>
 </Drawer>
     );

@@ -18,6 +18,12 @@ import Signup from './Signup';
 import Home from './Home';
 import Createshop from './Createshop';
 import FoodView from './FoodView';
+import shop from './shop';
+import Createmenu from './Createmenu';
+import FoodViewShop from './foodviewshop';
+import EditMenu from './editmenu';
+import Order from './Order';
+import OrderList from './Orderlist';
 import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body } from 'native-base';
 export default class pbm extends Component {
 static navigationOptions = {
@@ -33,7 +39,7 @@ static navigationOptions = {
      const { navigate } = this.props.navigation;
     return (
     // <View style={{height: height, width: null, backgroundColor:"green", flex:1,alignItems:'center', justifyContent:'center'}}>
-       <Login navigation={navigation}/>
+       <Createshop navigation={navigation}/>
     // </View>
      
     );
@@ -45,7 +51,13 @@ const pbmNavigation = StackNavigator({
   Signup : {screen : Signup},
   Home : {screen : Home},
   Createshop : {screen : Createshop},
-  FoodView : {screen : FoodView}
+  FoodView : {screen : FoodView},
+  Shop : {screen : shop},
+  Createmenu : {screen : Createmenu},
+  EditMenu : {screen : EditMenu},
+  FoodViewShop : {screen : FoodViewShop},
+  Order : {screen : Order},
+  OrderList : {screen : OrderList},
 });
 
 const styles = StyleSheet.create({

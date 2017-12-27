@@ -20,7 +20,7 @@ import GridView from 'react-native-super-grid';
 import ScrollableTabView, {DefaultTabBar, } from 'react-native-scrollable-tab-view';
 import { Container, Header, Content, Text, Button, Icon, Left, Body, Title, Right, Tabs, Tab, TabHeading, Card, CardItem} from 'native-base';
 var{width,height}=Dimensions.get('window');
-export default class FoodView extends Component {
+export default class FoodViewShop extends Component {
   static navigationOptions = {
       header : null
   };
@@ -77,17 +77,13 @@ export default class FoodView extends Component {
                 {this.props.navigation.state.params.paket}
               </Text>
               <Text style={{color : 'green', alignSelf : 'center'}}>
-                Rp. {this.props.navigation.state.params.harga}/orang
+               Rp. {this.props.navigation.state.params.harga}/porsi
               </Text>
-              <Text style={{color : 'black', marginLeft : 3}}>
-                Menu : {this.props.navigation.state.params.menu}
+               <Text style={{color : 'green', marginLeft : 3}}>
+                {this.props.navigation.state.params.menu}
               </Text>
         </Content>
-        <View style={{width : width, height : 40, position : 'absolute', bottom : 0}}>
-          <Button block onPress = {()=>navigate('Order')} style={{width : width, height : 40}}>
-            <Text>Order</Text>
-          </Button>
-        </View>
+          
       </Container>
 </Drawer>
     );
